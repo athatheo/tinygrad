@@ -42,7 +42,7 @@ def eval_resnet():
     d += len(t)
     print(f"****** {n}/{d}  {n*100.0/d:.2f}%")
     st = time.perf_counter()
-  
+
 def eval_unet3d():
   # UNet3D
   from models.unet3d import UNet3D
@@ -103,7 +103,7 @@ def eval_retinanet():
     n += len(targets)
     print(f"[{n}/{len(coco.imgs)}] == {(mt-st)*1000:.2f} ms loading data, {(et-mt)*1000:.2f} ms to run model, {(ext-et)*1000:.2f} ms for postprocessing")
     img_ids = [t["image_id"] for t in targets]
-    coco_results  = [{"image_id": targets[i]["image_id"], "category_id": label, "bbox": box, "score": score} 
+    coco_results  = [{"image_id": targets[i]["image_id"], "category_id": label, "bbox": box, "score": score}
       for i, prediction in enumerate(predictions) for box, score, label in zip(*prediction.values())]
     with redirect_stdout(None):
       coco_eval.cocoDt = coco.loadRes(coco_results)
@@ -184,12 +184,16 @@ def eval_bert():
 
     st = time.perf_counter()
 
+def eval_rcnn():
+  pass
+
+
 if __name__ == "__main__":
   # inference only
   Tensor.training = False
   Tensor.no_grad = True
 
-  models = getenv("MODEL", "resnet,retinanet,unet3d,rnnt,bert").split(",")
+  models = getenv("MODEL", "resnet,retinanet,unet3d,rnnt,bert,rcnn").split(",")
   for m in models:
     nm = f"eval_{m}"
     if nm in globals():
